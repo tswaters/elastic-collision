@@ -1,0 +1,60 @@
+{
+  "name": "elastic-collision",
+  "version": "1.0.0",
+  "description": "Physics simulation showing elastic collisions in a closed system",
+  "scripts": {
+    "start": "http-server src",
+    "format": "prettier --write .",
+    "lint": "eslint --ext js --ext mjs .",
+    "test": "mocha --verbose"
+  },
+  "author": "Tyler Waters <tyler.waters@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "http-server": "^0.12.3",
+    "mocha": "^9.0.3",
+    "prettier": "^2.3.2",
+    "sinon": "^11.1.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "eslint-config-prettier"
+    ],
+    "rules": {
+      "no-unused-vars": "off",
+      "eqeqeq": [
+        "error",
+        "smart"
+      ]
+    },
+    "env": {
+      "browser": true
+    },
+    "overrides": [
+      {
+        "files": "*.test.{js,mjs}",
+        "env": {
+          "mocha": true
+        }
+      }
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    }
+  },
+  "mocha": {
+    "spec": "**/*.test.{mjs,js}",
+    "ignore": [
+      "node_modules/**/*"
+    ],
+    "timeout": 0
+  }
+}
