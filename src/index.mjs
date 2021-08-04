@@ -11,7 +11,7 @@ import {
 } from './render-loop.mjs'
 
 import { Ball } from './ball.mjs'
-import { collides } from './collision.mjs'
+import { circleCollides } from './math.mjs'
 
 let startButton
 let stopButton
@@ -59,7 +59,7 @@ function handleStartButtonClick(e) {
       radius: Math.floor(Math.random() * 5) + 10,
     })
 
-    if (newThing.velocity === 0 || things.some((x) => collides(newThing, x))) {
+    if (newThing.velocity === 0 || things.some((x) => circleCollides(newThing, x))) {
       i--
     } else {
       things.push(newThing)

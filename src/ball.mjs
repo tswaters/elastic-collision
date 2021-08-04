@@ -8,10 +8,8 @@ class Ball {
   }
 
   update({ width, height }) {
-    const dx = this.velocity * Math.cos(this.angle * (Math.PI / 180))
-    const dy = this.velocity * Math.sin(this.angle * (Math.PI / 180))
-    this.x += Math.round(dx)
-    this.y += Math.round(dy)
+    this.x += this.velocity * Math.cos(this.angle * (Math.PI / 180))
+    this.y += this.velocity * Math.sin(this.angle * (Math.PI / 180))
 
     if (this.x < 0) {
       this.x = width - Math.abs(this.x)
