@@ -9,7 +9,18 @@ export function detect(things) {
 
     const collision = things.find((collider) => {
       if (asteroid === collider) return false
-      return circleCollides(asteroid, collider)
+      return circleCollides(
+        {
+          ...asteroid,
+          x: asteroid.x + asteroid.vx,
+          y: asteroid.y + asteroid.vy,
+        },
+        {
+          ...collider,
+          x: collider.x + collider.vx,
+          y: collider.y + collider.vy,
+        }
+      )
     })
 
     if (collision) {
