@@ -31,20 +31,10 @@ class Ball {
    * @returns
    */
   render({ ctx, width, height }) {
-    const { x, y } = this // snapshot
     ctx.beginPath()
     ctx.strokeStyle = 'white'
-    ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI)
     ctx.stroke()
-    return () => {
-      ctx.fillStyle = 'black'
-      ctx.fillRect(
-        x - this.radius - 1,
-        y - this.radius - 1,
-        this.radius * 2 + 2,
-        this.radius * 2 + 2
-      )
-    }
   }
 }
 

@@ -66,8 +66,6 @@ function handleStartButtonClick(e) {
     }
   }
 
-  ctx.fillStyle = 'black'
-  ctx.fillRect(0, 0, width, height)
   startGame(initialState)
   startRender(canvas, initialState)
 }

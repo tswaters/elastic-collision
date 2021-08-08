@@ -1,5 +1,9 @@
 let rfid = null
 let canvas = null
+
+/**
+ * @type {CanvasRenderingContext2D}
+ */
 let ctx
 let width
 let height
@@ -27,14 +31,9 @@ const unrender = []
 
 function render() {
   if (rfid !== null) rfid = requestAnimationFrame(render)
-  if (unrender.length > 0) {
-    unrender.forEach((unrenderer) => unrenderer())
-    unrender.splice(0, unrender.length)
-  }
-  things.forEach((thing) => {
-    const unrenderer = thing.render({ ctx, width, height })
-    if (unrenderer) unrender.push(unrenderer)
-  })
+  ctx.fillStyle = 'black'
+  ctx.fillRect(0, 0, width, height)
+  things.forEach((thing) => thing.render({ ctx, width, height }))
 }
 
 export function stop() {
