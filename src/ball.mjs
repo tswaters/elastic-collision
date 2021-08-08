@@ -8,21 +8,14 @@ class Ball {
   }
 
   update({ width, height }) {
-    this.x += this.vx
-    this.y += this.vy
+    const newx = this.x + this.vx
+    const newy = this.y + this.vy
 
-    if (this.x < 0) {
-      this.x = width - Math.abs(this.x)
-    }
-    if (this.x > width) {
-      this.x = this.x - width
-    }
-    if (this.y < 0) {
-      this.y = height - Math.abs(this.y)
-    }
-    if (this.y > height) {
-      this.y = this.y - height
-    }
+    if (newx - this.radius < 0 || newx + this.radius > width) this.vx *= -1
+    else this.x = newx
+
+    if (newy - this.radius < 0 || newy + this.radius > height) this.vy *= -1
+    else this.y = newy
   }
 
   /**
