@@ -1,15 +1,15 @@
 class Ball {
-  constructor({ x = 0, y = 0, velocity = 0, angle = 0, radius = 30 }) {
+  constructor({ x = 0, y = 0, vx = 0, vy = 0, radius = 30 }) {
     this.radius = radius
     this.x = x
     this.y = y
-    this.velocity = velocity
-    this.angle = angle
+    this.vx = vx
+    this.vy = vy
   }
 
   update({ width, height }) {
-    this.x += this.velocity * Math.cos(this.angle * (Math.PI / 180))
-    this.y += this.velocity * Math.sin(this.angle * (Math.PI / 180))
+    this.x += this.vx
+    this.y += this.vy
 
     if (this.x < 0) {
       this.x = width - Math.abs(this.x)

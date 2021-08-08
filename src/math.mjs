@@ -33,14 +33,10 @@ export function getNewVectors(o1, o2) {
   const dy1 = o1.y - o2.y
   const dx2 = o2.x - o1.x
   const dy2 = o2.y - o1.y
-  const vx1 = o1.velocity * Math.cos(o1.angle * (Math.PI / 180))
-  const vy1 = o1.velocity * Math.sin(o1.angle * (Math.PI / 180))
-  const vx2 = o2.velocity * Math.cos(o2.angle * (Math.PI / 180))
-  const vy2 = o2.velocity * Math.sin(o2.angle * (Math.PI / 180))
   return [
-    bounce(vx1, M, m2, dx1, dy1, vx1 - vx2, vy1 - vy2, dx1),
-    bounce(vy1, M, m2, dx1, dy1, vx1 - vx2, vy1 - vy2, dy1),
-    bounce(vx2, M, m1, dx2, dy2, vx2 - vx1, vy2 - vy1, dx2),
-    bounce(vy2, M, m1, dx2, dy2, vx2 - vx1, vy2 - vy1, dy2),
+    bounce(o1.vx, M, m2, dx1, dy1, o1.vx - o2.vx, o1.vy - o2.vy, dx1),
+    bounce(o1.vy, M, m2, dx1, dy1, o1.vx - o2.vx, o1.vy - o2.vy, dy1),
+    bounce(o2.vx, M, m1, dx2, dy2, o2.vx - o1.vx, o2.vy - o1.vy, dx2),
+    bounce(o2.vy, M, m1, dx2, dy2, o2.vx - o1.vx, o2.vy - o1.vy, dy2),
   ]
 }

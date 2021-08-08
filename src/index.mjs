@@ -54,8 +54,8 @@ function handleStartButtonClick(e) {
     const newThing = new Ball({
       x: Math.floor(Math.random() * width),
       y: Math.floor(Math.random() * height),
-      velocity: Math.floor(Math.random() * 5),
-      angle: Math.floor(Math.random() * 360),
+      vx: 5 - Math.floor(Math.random() * 10),
+      vy: 5 - Math.floor(Math.random() * 10),
       radius: Math.floor(Math.random() * 5) + 10,
     })
 

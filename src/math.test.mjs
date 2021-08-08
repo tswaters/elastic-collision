@@ -2,6 +2,7 @@ import assert from 'assert'
 import { angle, circleCollides, getNewVectors } from './math.mjs'
 
 const compare = (a, b, accuracy = 1.9) => {
+  if (isNaN(a) || isNaN(a)) assert.deepStrictEqual(a, b)
   const big = Math.max(Math.abs(a), Math.abs(b))
   const ep = big * accuracy
   if (Math.abs(a - b) > ep) {
@@ -53,15 +54,15 @@ describe('circleCollides', () => {
           x: 326,
           y: 174,
           radius: 50,
-          angle: 315,
-          velocity: 5,
+          vx: 3.5,
+          vy: -3.5,
         },
         {
           x: 424,
           y: 174,
           radius: 50,
-          angle: 225,
-          velocity: 5,
+          vx: -3.5,
+          vy: -3.5,
         }
       )
 

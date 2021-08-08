@@ -18,15 +18,9 @@ export function detect(things) {
 
       const [newX1, newY1, newX2, newY2] = getNewVectors(asteroid, collision)
 
-      Object.assign(asteroid, {
-        angle: angle(newX1, newY1),
-        velocity: hyp(newY1, newX1),
-      })
+      Object.assign(asteroid, { vx: newX1, vy: newY1 })
 
-      Object.assign(collision, {
-        angle: angle(newX2, newY2),
-        velocity: hyp(newY2, newX2),
-      })
+      Object.assign(collision, { vx: newX2, xy: newY2 })
     }
   }
 }
