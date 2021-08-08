@@ -1,13 +1,12 @@
-export function circleCollides(o1, o2) {
-  const x1 = Math.abs(o1.x - o2.x)
-  const y1 = Math.abs(o1.y - o2.y)
-  const d = (x1 ** 2 + y1 ** 2) ** 0.5
-  return d <= o1.radius + o2.radius
-}
-
 export const hyp = (a, b) => (a ** 2 + b ** 2) ** 0.5
 
 export const degrad = (i) => i * (180 / Math.PI)
+
+export function circleCollides(o1, o2) {
+  const x1 = Math.abs(o1.x - o2.x)
+  const y1 = Math.abs(o1.y - o2.y)
+  return hyp(x1, y1) <= o1.radius + o2.radius
+}
 
 export function bounce(v, M, m, dx, dy, dvx, dvy, o) {
   const p1 = (2 * m) / M
@@ -15,15 +14,7 @@ export function bounce(v, M, m, dx, dy, dvx, dvy, o) {
   return v - p1 * p2 * o
 }
 
-export function angle(x, y) {
-  if (x === 0 && y === 0) return 0
-  if (x === 0) return y > 0 ? 90 : 270
-  const offset = x < 0 ? 180 : y < 0 ? 360 : 0
-  return degrad(Math.atan(y / x)) + offset
-}
-
-// export const angle = (x, y) =>
-//   degrad(Math.atan2(y, x)) + (y < 0 ? 360 : 0)
+export const angle = (x, y) => degrad(Math.atan2(y, x)) + (y < 0 ? 360 : 0)
 
 export function getNewVectors(o1, o2) {
   const m1 = o1.radius

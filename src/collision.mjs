@@ -1,4 +1,4 @@
-import { circleCollides, getNewVectors, angle, hyp } from './math.mjs'
+import { circleCollides, getNewVectors } from './math.mjs'
 
 export function detect(things) {
   const seen = new WeakSet()
