@@ -75,5 +75,4 @@ function handleStopButtonClick(e) {
   e.preventDefault()
   stopGame()
   stopRender()
-  things.flush()
 }
