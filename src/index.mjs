@@ -60,7 +60,10 @@ function handleStartButtonClick(e) {
       radius,
     })
 
-    if (newThing.velocity === 0 || things.some((x) => circleCollides(newThing, x))) {
+    if (
+      newThing.velocity === 0 ||
+      things.some((x) => circleCollides(newThing, x))
+    ) {
       i--
     } else {
       things.push(newThing)
