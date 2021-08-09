@@ -11,7 +11,8 @@ import {
 } from './render-loop.mjs'
 
 import { Ball } from './ball.mjs'
-import { collides } from './collision.mjs'
+import { circleCollides } from './math.mjs'
+import { QuadTree } from './collision.mjs'
 
 let startButton
 let stopButton
@@ -49,25 +50,26 @@ document.addEventListener('resize', () => {
 function handleStartButtonClick(e) {
   e?.preventDefault()
   const initialState = { width, height, things }
+  const qt = new QuadTree({ width, height, things: [] })
 
   for (let i = 0; i < 30; i += 1) {
+    const radius = Math.floor(Math.random() * 5) + 10
     const newThing = new Ball({
-      x: Math.floor(Math.random() * width),
-      y: Math.floor(Math.random() * height),
-      velocity: Math.floor(Math.random() * 5),
-      angle: Math.floor(Math.random() * 360),
-      radius: Math.floor(Math.random() * 5) + 10,
+      x: Math.floor(Math.random() * (width - radius * 2) + radius),
+      y: Math.floor(Math.random() * (height - radius * 2) + radius),
+      vx: 5 - Math.floor(Math.random() * 10),
+      vy: 5 - Math.floor(Math.random() * 10),
+      radius,
     })
 
-    if (newThing.velocity === 0 || things.some((x) => collides(newThing, x))) {
+    if (qt.check(newThing).some((x) => circleCollides(newThing, x))) {
       i--
     } else {
       things.push(newThing)
+      qt.insert(newThing)
     }
   }
 
-  ctx.fillStyle = 'black'
-  ctx.fillRect(0, 0, width, height)
   startGame(initialState)
   startRender(canvas, initialState)
 }
@@ -76,5 +78,4 @@ function handleStopButtonClick(e) {
   e.preventDefault()
   stopGame()
   stopRender()
-  things.flush()
 }

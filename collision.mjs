@@ -1,91 +1,118 @@
-export function detect(things) {
-  const seen = new WeakSet()
+import { circleCollides, cirlceIntersectsRect, getNewVectors } from './math.mjs'
 
-  for (let i = 0; i < things.length; i += 1) {
-    const asteroid = things[i]
-    if (seen.has(asteroid)) continue
+export function detect(things, { width, height }) {
+  const qt = new QuadTree({
+    things,
+    width,
+    height,
+    match: cirlceIntersectsRect,
+  })
 
-    const collision = things.find((collider) => {
-      if (asteroid === collider) return false
-      return collides(asteroid, collider)
+  things.forEach((thing) => {
+    qt.check(thing).forEach((check) => {
+      if (
+        thing !== check &&
+        circleCollides(
+          {
+            ...thing,
+            x: thing.x + thing.vx,
+            y: thing.y + thing.vy,
+          },
+          {
+            ...check,
+            x: check.x + check.vx,
+            y: check.y + check.vy,
+          }
+        )
+      ) {
+        const [newX1, newY1, newX2, newY2] = getNewVectors(thing, check)
+        Object.assign(thing, { vx: newX1, vy: newY1 })
+        Object.assign(check, { vx: newX2, xy: newY2 })
+      }
     })
+  })
+}
 
-    if (collision) {
-      seen.add(collision)
-      seen.add(asteroid)
-
-      const [newAsteroid, newCollission] = getNewVectors(asteroid, collision)
-
-      Object.assign(asteroid, newAsteroid)
-      Object.assign(collision, newCollission)
+export class QuadTree {
+  constructor({
+    things = [],
+    limit = 5,
+    width,
+    height,
+    x = 0,
+    y = 0,
+    match = cirlceIntersectsRect,
+  }) {
+    this.match = match
+    this.tl = null
+    this.tr = null
+    this.bl = null
+    this.br = null
+    this.things = []
+    this.limit = limit
+    this.width = width
+    this.height = height
+    this.x = x
+    this.y = y
+    things.forEach((thing) => this.insert(thing))
+  }
+  split() {
+    this.tl = new QuadTree({
+      width: this.width / 2,
+      height: this.height / 2,
+      things: this.things,
+      x: this.x,
+      y: this.y,
+      match: this.match,
+    })
+    this.tr = new QuadTree({
+      width: this.width / 2,
+      height: this.height / 2,
+      things: this.things,
+      x: this.x + this.width / 2,
+      y: this.y,
+      match: this.match,
+    })
+    this.bl = new QuadTree({
+      width: this.width / 2,
+      height: this.height / 2,
+      things: this.things,
+      x: this.x,
+      y: this.y + this.height / 2,
+      match: this.match,
+    })
+    this.br = new QuadTree({
+      width: this.width / 2,
+      height: this.height / 2,
+      things: this.things,
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2,
+      match: this.match,
+    })
+    this.things = []
+  }
+  check(thing) {
+    if (!this.match(this, thing)) return []
+    if (this.tr == null) return this.things
+    return [].concat(
+      this.tl.check(thing),
+      this.tr.check(thing),
+      this.bl.check(thing),
+      this.br.check(thing)
+    )
+  }
+  insert(thing) {
+    if (!this.match(this, thing)) return
+    if (this.tr == null) {
+      this.things.push(thing)
+      if (this.things.length === this.limit) {
+        this.split()
+      }
+    } else {
+      this.tr.insert(thing)
+      this.tl.insert(thing)
+      this.br.insert(thing)
+      this.bl.insert(thing)
     }
   }
-}
-
-function sigDig(x) {
-  return parseFloat(x.toFixed(3))
-}
-
-export function collides(o1, o2) {
-  const x1 = Math.abs(o1.x - o2.x)
-  const y1 = Math.abs(o1.y - o2.y)
-  const d = (x1 ** 2 + y1 ** 2) ** 0.5
-  return d <= o1.radius + o2.radius
-}
-
-const hyp = (a, b) => (a ** 2 + b ** 2) ** 0.5
-
-const degrad = (i) => i * (180 / Math.PI)
-
-export const angle = (x, y) => {
-  if (x === 0 && y === 0) return 0
-  if (x === 0) return y > 0 ? 90 : 270
-  const offset = x < 0 ? 180 : y < 0 ? 360 : 0
-  return Math.round(degrad(Math.atan(y / x)) + offset)
-}
-
-// export const angle = (x, y) =>
-//   degrad(Math.atan2(y, x)) + (y < 0 ? 360 : 0)
-
-export function getNewVectors(o1, o2) {
-  const m1 = o1.radius
-  const m2 = o2.radius
-  const vx1 = Math.round(
-    o1.velocity * sigDig(Math.cos(o1.angle * (Math.PI / 180)))
-  )
-  const vy1 = Math.round(
-    o1.velocity * sigDig(Math.sin(o1.angle * (Math.PI / 180)))
-  )
-  const vx2 = Math.round(
-    o2.velocity * sigDig(Math.cos(o2.angle * (Math.PI / 180)))
-  )
-  const vy2 = Math.round(
-    o2.velocity * sigDig(Math.sin(o2.angle * (Math.PI / 180)))
-  )
-  const M = m1 + m2
-
-  const dx1 = o1.x - o2.x
-  const dy1 = o1.y - o2.y
-
-  const dx2 = o2.x - o1.x
-  const dy2 = o2.y - o1.y
-
-  const calc = (v, m, dx, dy, dvx, dvy, o) => {
-    const p1 = (2 * m) / M
-    const p2 = (dvx * dx + dvy * dy) / (dx * dx + dy * dy)
-    return Math.round(v - p1 * p2 * o)
-  }
-
-  const newX1 = calc(vx1, m2, dx1, dy1, vx1 - vx2, vy1 - vy2, dx1)
-
-  const newY1 = calc(vy1, m2, dx1, dy1, vx1 - vx2, vy1 - vy2, dy1)
-
-  const newX2 = calc(vx2, m1, dx2, dy2, vx2 - vx1, vy2 - vy1, dx2)
-
-  const newY2 = calc(vy2, m1, dx2, dy2, vx2 - vx1, vy2 - vy1, dy2)
-
-  return [
-    { angle: angle(newX1, newY1), velocity: Math.round(hyp(newY1, newX1)) },
-    { angle: angle(newX2, newY2), velocity: Math.round(hyp(newY2, newX2)) },
-  ]
 }

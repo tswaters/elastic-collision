@@ -27,7 +27,7 @@ export function resize() {
 export function update() {
   if (tid !== null) tid = setTimeout(update, tickSpeed)
   things.forEach((thing) => thing.update({ state, width, height }))
-  detect(things)
+  detect(things, { state, width, height })
 }
 
 export function stop() {
