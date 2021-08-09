@@ -1,6 +1,6 @@
 {
   "name": "elastic-collision",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Physics simulation showing elastic collisions in a closed system",
   "scripts": {
     "start": "http-server src",
