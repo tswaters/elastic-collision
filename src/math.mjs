@@ -8,6 +8,15 @@ export function circleCollides(o1, o2) {
   return hyp(x1, y1) <= o1.radius + o2.radius
 }
 
+export function cirlceIntersectsRect(
+  { x: rectX, y: rectY, width, height }, // rect
+  { x: circleX, y: circleY, radius } // circle
+) {
+  const dx = circleX - Math.max(rectX, Math.min(circleX, rectX + width))
+  const dy = circleY - Math.max(rectY, Math.min(circleY, rectY + height))
+  return dx ** 2 + dy ** 2 < radius ** 2
+}
+
 export function bounce(v, M, m, dx, dy, dvx, dvy, o) {
   const p1 = (2 * m) / M
   const p2 = (dvx * dx + dvy * dy) / (dx ** 2 + dy ** 2)

@@ -12,6 +12,7 @@ import {
 
 import { Ball } from './ball.mjs'
 import { circleCollides } from './math.mjs'
+import { QuadTree } from './collision.mjs'
 
 let startButton
 let stopButton
@@ -49,6 +50,7 @@ document.addEventListener('resize', () => {
 function handleStartButtonClick(e) {
   e?.preventDefault()
   const initialState = { width, height, things }
+  const qt = new QuadTree({ width, height, things: [] })
 
   for (let i = 0; i < 30; i += 1) {
     const radius = Math.floor(Math.random() * 5) + 10
@@ -60,13 +62,11 @@ function handleStartButtonClick(e) {
       radius,
     })
 
-    if (
-      newThing.velocity === 0 ||
-      things.some((x) => circleCollides(newThing, x))
-    ) {
+    if (qt.check(newThing).some((x) => circleCollides(newThing, x))) {
       i--
     } else {
       things.push(newThing)
+      qt.insert(newThing)
     }
   }
 
